@@ -98,6 +98,7 @@ async def on_ready():
     print('\n{} online in:'.format(bot.user.name))
     for guild in bot.guilds:
         print(guild.name)
+        guild.say('Qbot is online for your queueing pleasure')
     print('\n')
     printQueue()
 
