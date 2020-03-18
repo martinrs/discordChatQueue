@@ -1,4 +1,4 @@
-import os, json
+import os, json, discord.utils
 from discord.ext import commands
 from dotenv import load_dotenv
 
@@ -80,11 +80,12 @@ async def nvm(ctx):
 async def next(ctx):
     if len(data['queue']) > 0 and ctx.author == ctx.guild.owner:
         call = data['queue'][0]
+        caller = discord.utils.get(ctx.guild.members, name=call['name'])
         await ctx.send('Next up: {}'.format(call['name']))
         await ctx.guild.owner.send('Next up: {} {} {}'.format(call['server'], call['name'], call['message']))
-        await ctx.author.send('You are up!')
+        await caller.send('You are up!')
         data['queue'].pop(0)
-    await ctx.send('{} are queueing'.format(print(len(data['queue']))))
+    await ctx.send('{} queueing'.format(len(data['queue'])))
     saveState()
 
 @bot.command(name='clear', help='Teachers only. Clears the queue.')
@@ -98,7 +99,7 @@ async def on_ready():
     print('\n{} online in:'.format(bot.user.name))
     for guild in bot.guilds:
         print(guild.name)
-        guild.say('Qbot is online for your queueing pleasure')
+        guild.text_channels[0].send('Qbot is online for your queueing pleasure')
     print('\n')
     printQueue()
 
