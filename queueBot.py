@@ -30,13 +30,19 @@ def loadFromJson(filename):
         raise
     return content
 
-def printQueue():
+def getScreenName(caller):
+    if caller.nick:
+        return caller.nick
+    else:
+        return caller.name
+
+def printQueue(ctx):
     global separator
     print(separator)
     if len(data['queue']) > 0:
         for i in range(len(data['queue'])):
             call = data['queue'][i]
-            print(i, call['server'], discord.utils.get(ctx.guild.members, id=call['id']).name, call['message'], call['id'])
+            print(i, call['server'], getScreenName(discord.utils.get(ctx.guild.members, id=call['id'])), call['message'], call['id'])
     else:
         print('Queue empty')
     print(separator)
@@ -44,9 +50,9 @@ def printQueue():
 def addToQueue(caller, server, message):
     data['queue'].append({'id': caller.id, 'server': server.name, 'message': message})
 
-def saveState():
+def saveState(ctx):
     saveToJson(dataFile, data)
-    printQueue()
+    printQueue(ctx)
 
 def isQueued(caller):
     for call in data['queue']:
@@ -61,11 +67,11 @@ async def call(ctx, message=''):
     elif ctx.valid:
         addToQueue(ctx.author, ctx.guild, message)
         if len(data['queue']) > 1:
-            await ctx.send('Noted {}. {} queueing in front of you.'.format(ctx.author, len(data['queue'])-1))
+            await ctx.send('Noted {}. {} queueing in front of you.'.format(ctx.author.display_name, len(data['queue'])-1))
         else:
-            await ctx.send('Noted. {} is next up.'.format(ctx.author))
+            await ctx.send('Noted. {} is next up.'.format(ctx.author.display_name))
         await ctx.guild.owner.send('{} calls in queue'.format(len(data['queue'])))
-        saveState()
+        saveState(ctx)
     else:
         print('Something went wrong in call()')
 
@@ -74,18 +80,20 @@ async def nvm(ctx):
     for i in range(len(data['queue'])):
         if data['queue'][i]['id'] == ctx.author.id:
             data['queue'].pop(i)
-            ctx.send('{} removed from queue'.format(ctx.author.name))
+            ctx.send('{} removed from queue'.format(ctx.author.display_name))
 
 @bot.command(name='next', help='Teachers only. Get the next question or comment in the queue.')
 async def next(ctx):
     if len(data['queue']) > 0 and ctx.author == ctx.guild.owner:
         call = data['queue'][0]
         caller = discord.utils.get(ctx.guild.members, id=call['id'])
-        await ctx.send('Next up: {}'.format(caller.name))
-        await ctx.guild.owner.send('Next up: {} {} {}'.format(call['server'], caller.name, call['message']))
+        await ctx.send('Next up: {}'.format(caller.display_name))
+        await ctx.guild.owner.send('Next up: {} {} {}'.format(call['server'], caller.display_name, call['message']))
         await caller.send('You are up!')
         data['queue'].pop(0)
-        saveState()
+        saveState(ctx)
+        if caller.voice.channel:
+            await ctx.guild.owner.move_to(caller.voice.channel)
         #https://discordpy.readthedocs.io/en/latest/api.html?highlight=move%20member#discord.Member.move_to
     await ctx.send('{} queueing'.format(len(data['queue'])))
 
@@ -93,7 +101,7 @@ async def next(ctx):
 async def clear(ctx):
     if ctx.author == ctx.guild.owner:
         data['queue'] = []
-        saveState()
+        saveState(ctx)
 
 @bot.event
 async def on_ready():
@@ -103,9 +111,7 @@ async def on_ready():
         print(guild.name)
         for channel in guild.text_channels:
             print(channel.name)
-            await channel.send('Qbot is online for your queueing pleasure')
-    print('\n')
-    printQueue()
+            #await channel.send('Qbot is online for your queueing pleasure')
 
 @bot.event
 async def on_member_join(member):
