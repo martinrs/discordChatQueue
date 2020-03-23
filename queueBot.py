@@ -32,9 +32,8 @@ def loadFromJson(filename):
         raise
     return content
 
-async def printQueue(ctx):
-    global separator
-    print(separator)
+def makeQueueString(ctx):
+    queuestring = 'Queue is empty'
     if len(data[ctx.guild.id]['queue']) > 0:
         queuestring = ''
         print('{}\n'.format(ctx.guild.name))
@@ -43,9 +42,12 @@ async def printQueue(ctx):
             callername = discord.utils.get(ctx.guild.members, id=call['id']).display_name
             print(i, callername, call['message'])
             queuestring += '{}:\t{}\n'.format(i, callername)
-        await ctx.send(queuestring)
-    else:
-        print('Queue empty')
+    return queuestring
+
+def printQueue(ctx):
+    global separator
+    print(separator)
+    print(makeQueueString(ctx))
     print(separator)
 
 def addToQueue(caller, server, message):
@@ -53,7 +55,7 @@ def addToQueue(caller, server, message):
 
 async def saveState(ctx):
     saveToJson(ctx.guild.id, data[ctx.guild.id])
-    await printQueue(ctx)
+    printQueue(ctx)
 
 def isQueued(caller):
     for call in data[caller.guild.id]['queue']:
@@ -68,10 +70,10 @@ async def call(ctx, message=''):
     else:
         addToQueue(ctx.author, ctx.guild, message)
         if len(data[ctx.guild.id]['queue']) > 1:
-            await ctx.send('Noted {}. {} queueing in front of you.'.format(ctx.author.display_name, len(data[ctx.guild.id]['queue'])-1))
+            await ctx.send('Noted {}. {} queueing in front of you.\n{} in queue for you {}'.format(ctx.author.display_name, len(data[ctx.guild.id]['queue'])-1, len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention, len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention))
         else:
-            await ctx.send('Noted. {} is next up.'.format(ctx.author.display_name))
-        await ctx.send('{} in queue for you {}'.format(len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention))
+            await ctx.send('Noted. {} is next up.\n{} in queue for you {}'.format(ctx.author.display_name))
+        #await ctx.send('{} in queue for you {}'.format(len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention))
         await saveState(ctx)
 
 @bot.command(name='nvm', help='Never mind. The equivalent of lowering a raied hand')
@@ -93,7 +95,7 @@ async def next(ctx):
         #if caller.voice.channel:
         #    await ctx.guild.owner.move_to(caller.voice.channel)
         #https://discordpy.readthedocs.io/en/latest/api.html?highlight=move%20member#discord.Member.move_to
-    await ctx.send('{} queueing'.format(len(data[ctx.guild.id]['queue'])))
+    await ctx.send('{} queueing:\n{}'.format(len(data[ctx.guild.id]['queue']), makeQueueString(ctx)))
 
 @bot.command(name='clear', help='Teachers only. Clears the queue.')
 async def clear(ctx):
@@ -115,7 +117,7 @@ async def on_ready():
             saveToJson(guild.id, data[guild.id])
         for channel in guild.text_channels:
             print(channel.name)
-            #await channel.send('Qbot is online for your queueing pleasure')
+            await channel.send('Qbot is online for your queueing pleasure')
     pprint.pprint(data)
 
 @bot.event
