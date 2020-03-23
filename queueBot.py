@@ -117,7 +117,7 @@ async def on_ready():
             saveToJson(guild.id, data[guild.id])
         for channel in guild.text_channels:
             print(channel.name)
-            #await channel.send('Qbot is online for your queueing pleasure')
+            await channel.send('Qbot is online for your queueing pleasure')
     pprint.pprint(data)
 
 @bot.event
