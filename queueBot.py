@@ -35,12 +35,10 @@ def loadFromJson(filename):
 def makeQueueString(ctx):
     queuestring = 'Queue is empty'
     if len(data[ctx.guild.id]['queue']) > 0:
-        queuestring = ''
-        print('{}\n'.format(ctx.guild.name))
+        queuestring = '{}\n'.format(ctx.guild.name)
         for i in range(len(data[ctx.guild.id]['queue'])):
             call = data[ctx.guild.id]['queue'][i]
             callername = discord.utils.get(ctx.guild.members, id=call['id']).display_name
-            print(i, callername, call['message'])
             queuestring += '{}:\t{}\n'.format(i, callername)
     return queuestring
 
@@ -89,7 +87,7 @@ async def next(ctx):
         call = data[ctx.guild.id]['queue'][0]
         caller = discord.utils.get(ctx.guild.members, id=call['id'])
         data[ctx.guild.id]['queue'].pop(0)
-        await ctx.send('You are up {}!\nQueueing:\n{}'.format(caller.mention, makeQueueString(ctx)))
+        await ctx.send('You are up {}!\n{}'.format(caller.mention, makeQueueString(ctx)))
         await ctx.guild.owner.send('Next up: {} {}'.format(caller.display_name, call['message']))
         await saveState(ctx)
         #if caller.voice.channel:
@@ -117,7 +115,7 @@ async def on_ready():
             saveToJson(guild.id, data[guild.id])
         for channel in guild.text_channels:
             print(channel.name)
-            await channel.send('Qbot is online for your queueing pleasure')
+            #await channel.send('Qbot is online for your queueing pleasure')
     pprint.pprint(data)
 
 @bot.event
