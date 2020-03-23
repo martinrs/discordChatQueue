@@ -71,7 +71,7 @@ async def call(ctx, message=''):
             await ctx.send('Noted {}. {} queueing in front of you.'.format(ctx.author.display_name, len(data[ctx.guild.id]['queue'])-1))
         else:
             await ctx.send('Noted. {} is next up.'.format(ctx.author.display_name))
-        await ctx.send('{} in queue for you {}'.format(len(data[ctx.guild.id]['queue']), guild.owner.mention))
+        await ctx.send('{} in queue for you {}'.format(len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention))
         await saveState(ctx)
 
 @bot.command(name='nvm', help='Never mind. The equivalent of lowering a raied hand')
