@@ -72,7 +72,7 @@ async def call(ctx, message=''):
         if len(data[ctx.guild.id]['queue']) > 1:
             await ctx.send('Noted {}. {} queueing in front of you.\n{} in queue for you {}'.format(ctx.author.display_name, len(data[ctx.guild.id]['queue'])-1, len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention, len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention))
         else:
-            await ctx.send('Noted. {} is next up.\n{} in queue for you {}'.format(ctx.author.display_name))
+            await ctx.send('Noted. {} is next up.\n{} in queue for you {}'.format(len(data[ctx.guild.id]['queue']), ctx.author.display_name, len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention))
         #await ctx.send('{} in queue for you {}'.format(len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention))
         await saveState(ctx)
 
@@ -83,21 +83,21 @@ async def nvm(ctx):
             data[ctx.guild.id]['queue'].pop(i)
             ctx.send('{} removed from queue'.format(ctx.author.display_name))
 
-@bot.command(name='next', help='Teachers only. Get the next question or comment in the queue.')
+@bot.command(name='next', help='See the current queue. Channel owner advances the queue as well.')
 async def next(ctx):
     if len(data[ctx.guild.id]['queue']) > 0 and ctx.author == ctx.guild.owner:
         call = data[ctx.guild.id]['queue'][0]
         caller = discord.utils.get(ctx.guild.members, id=call['id'])
-        await ctx.send('You are up {}!'.format(caller.mention))
-        await ctx.guild.owner.send('Next up: {} {}'.format(caller.display_name, call['message']))
         data[ctx.guild.id]['queue'].pop(0)
+        await ctx.send('You are up {}!\nQueueing:\n{}'.format(caller.mention, makeQueueString(ctx)))
+        await ctx.guild.owner.send('Next up: {} {}'.format(caller.display_name, call['message']))
         await saveState(ctx)
         #if caller.voice.channel:
         #    await ctx.guild.owner.move_to(caller.voice.channel)
         #https://discordpy.readthedocs.io/en/latest/api.html?highlight=move%20member#discord.Member.move_to
     await ctx.send('{} queueing:\n{}'.format(len(data[ctx.guild.id]['queue']), makeQueueString(ctx)))
 
-@bot.command(name='clear', help='Teachers only. Clears the queue.')
+@bot.command(name='clear', help='Channel owner only. Clears the queue.')
 async def clear(ctx):
     if ctx.author == ctx.guild.owner:
         data[ctx.guild.id]['queue'] = []
@@ -117,7 +117,7 @@ async def on_ready():
             saveToJson(guild.id, data[guild.id])
         for channel in guild.text_channels:
             print(channel.name)
-            await channel.send('Qbot is online for your queueing pleasure')
+            #await channel.send('Qbot is online for your queueing pleasure')
     pprint.pprint(data)
 
 @bot.event
