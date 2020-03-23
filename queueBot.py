@@ -79,7 +79,7 @@ async def nvm(ctx):
     for i in range(len(data[ctx.guild.id]['queue'])):
         if data[ctx.guild.id]['queue'][i]['id'] == ctx.author.id:
             data[ctx.guild.id]['queue'].pop(i)
-            ctx.send('{} removed from queue'.format(ctx.author.display_name))
+            await ctx.send('{} removed from queue'.format(ctx.author.display_name))
 
 @bot.command(name='next', help='See the current queue. Channel owner advances the queue as well.')
 async def next(ctx):
