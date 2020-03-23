@@ -72,7 +72,7 @@ async def call(ctx, message=''):
         if len(data[ctx.guild.id]['queue']) > 1:
             await ctx.send('Noted {}. {} queueing in front of you.\n{} in queue for you {}'.format(ctx.author.display_name, len(data[ctx.guild.id]['queue'])-1, len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention, len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention))
         else:
-            await ctx.send('Noted. {} is next up.\n{} in queue for you {}'.format(len(data[ctx.guild.id]['queue']), ctx.author.display_name, len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention))
+            await ctx.send('Noted. {} is next up.\n{} in queue for you {}'.format(ctx.author.display_name, len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention))
         #await ctx.send('{} in queue for you {}'.format(len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention))
         await saveState(ctx)
 
