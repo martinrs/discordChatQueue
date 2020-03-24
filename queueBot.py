@@ -1,7 +1,6 @@
 import os, json, discord.utils, pprint
 from discord.ext import commands
 from dotenv import load_dotenv
-from pathlib import Path
 
 separator = '------------------------------------------------------------------'
 
@@ -128,8 +127,7 @@ async def on_member_join(member):
 def main():
     global data
     print('Setting up')
-    env_path = Path('.') / '.env'
-    load_dotenv(dotenv_path=env_path)
+    load_dotenv()
     print('\nRunning bot.\nAdd the bot to servers with this link:\n{}'.format(os.getenv('BOT_LINK')))
     bot.run(os.getenv('DISCORD_TOKEN'))
 
