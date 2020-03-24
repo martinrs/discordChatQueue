@@ -35,7 +35,7 @@ def loadFromJson(filename):
 def makeQueueString(ctx):
     queuestring = 'Queue is empty'
     if len(data[ctx.guild.id]['queue']) > 0:
-        queuestring = '{}\n'.format(ctx.guild.name)
+        queuestring = ''
         for i in range(len(data[ctx.guild.id]['queue'])):
             call = data[ctx.guild.id]['queue'][i]
             callername = discord.utils.get(ctx.guild.members, id=call['id']).display_name
@@ -45,6 +45,7 @@ def makeQueueString(ctx):
 def printQueue(ctx):
     global separator
     print(separator)
+    print(ctx.guild.name)
     print(makeQueueString(ctx))
     print(separator)
 
@@ -83,17 +84,18 @@ async def nvm(ctx):
 
 @bot.command(name='next', help='See the current queue. Channel owner advances the queue as well.')
 async def next(ctx):
+    mentionString = ''
     if len(data[ctx.guild.id]['queue']) > 0 and ctx.author == ctx.guild.owner:
         call = data[ctx.guild.id]['queue'][0]
         caller = discord.utils.get(ctx.guild.members, id=call['id'])
         data[ctx.guild.id]['queue'].pop(0)
-        await ctx.send('You are up {}!\n{}'.format(caller.mention, makeQueueString(ctx)))
+        mentionString = 'You are up {}!'.format(caller.mention)
         await ctx.guild.owner.send('Next up: {} {}'.format(caller.display_name, call['message']))
         await saveState(ctx)
         #if caller.voice.channel:
         #    await ctx.guild.owner.move_to(caller.voice.channel)
         #https://discordpy.readthedocs.io/en/latest/api.html?highlight=move%20member#discord.Member.move_to
-    await ctx.send('{} queueing:\n{}'.format(len(data[ctx.guild.id]['queue']), makeQueueString(ctx)))
+    await ctx.send('{}\n{}'.format(mentionString, makeQueueString(ctx)))
 
 @bot.command(name='clear', help='Channel owner only. Clears the queue.')
 async def clear(ctx):
