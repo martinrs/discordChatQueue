@@ -91,7 +91,7 @@ async def next(ctx):
         data[ctx.guild.id]['queue'].pop(0)
         mentionString = 'You are up {}!'.format(caller.mention)
         if call['message'] != '':
-            await ctx.guild.owner.send('Next up: {} {}'.format(caller.display_name, call['message']))
+            await ctx.guild.owner.send('Message from {}: {}'.format(caller.display_name, call['message']))
         await saveState(ctx)
         #if caller.voice.channel:
         #    await ctx.guild.owner.move_to(caller.voice.channel)
