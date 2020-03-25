@@ -118,12 +118,12 @@ async def on_ready():
             saveToJson(guild.id, data[guild.id])
         for channel in guild.text_channels:
             print(channel.name)
-            #await channel.send('Qbot is online for your queueing pleasure')
+            await channel.send('{} is online for your queueing pleasure'.format(bot.display_name))
     pprint.pprint(data)
 
 @bot.event
 async def on_member_join(member):
-    await member.send("Hi! I'm Qbot. I help {} keep track of whose turn it is.\nI know these commands:\n!call\n!nvm\n!next")
+    await member.send("Hi! I'm {}. I help {} keep track of whose turn it is.\nI know these commands:\n!call\n!nvm\n!next".format(bot.display_name))
 
 def main():
     global data
