@@ -1,4 +1,4 @@
-# discordChatQueue
+# discordQueueBot
 
 This is a lightweight queueing system for managing questions and discussions when teaching or meeting through Discord. The bot lets members of a Discord guild/server queue for something and enables the owner of the guild/server keep track of the queue.
 
