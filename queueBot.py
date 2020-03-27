@@ -123,7 +123,7 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    await member.send("Hi! I'm {}. I help {} keep track of whose turn it is.\nI know these commands:\n!call\n!nvm\n!next".format(bot.user.display_name, member.guild.owner))
+    await member.send("Hi! I'm {}. I help {} keep track of whose turn it is.\nI know these commands:\n!call\n!nvm\n!next\n\nUse '!help to learn more.'".format(bot.user.display_name, member.guild.owner))
 
 def main():
     global data
