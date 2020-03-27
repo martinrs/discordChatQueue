@@ -62,7 +62,7 @@ def isQueued(caller):
             return True
     return False
 
-@bot.command(name='call', help='The equivalent of raising your hand. Optional: Type a question, topic or comment to help your teacher, e.g.: "!call Struggling with rocket science" or "!call None of you understand. I’m not locked up in here with you. You’re locked up in here with me!"')
+@bot.command(name='call', help='The equivalent of raising your hand. Optional: Type a question, topic or comment to help your teacher, e.g.: "!call Struggling with rocket science" or "!call I have information regarding item two on the agenda"')
 async def call(ctx, message=''):
     if isQueued(ctx.author):
         await ctx.send('You are already queueing. Patience please.')
