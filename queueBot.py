@@ -63,16 +63,17 @@ def isQueued(caller):
     return False
 
 @bot.command(name='call', help='The equivalent of raising your hand. Optional: Type a question, topic or comment to help your teacher, e.g.: "!call Struggling with rocket science" or "!call I have information regarding item two on the agenda"')
-async def call(ctx, message=''):
+async def call(ctx, *message):
     if isQueued(ctx.author):
         await ctx.send('You are already queueing. Patience please.')
     else:
+        if message != None:
+            message = ' '.join(message)
         addToQueue(ctx.author, ctx.guild, message)
         if len(data[ctx.guild.id]['queue']) > 1:
             await ctx.send('Noted {}. {} queueing in front of you.\n{} in queue for you {}'.format(ctx.author.display_name, len(data[ctx.guild.id]['queue'])-1, len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention, len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention))
         else:
             await ctx.send('Noted. {} is next up.\n{} in queue for you {}'.format(ctx.author.display_name, len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention))
-        #await ctx.send('{} in queue for you {}'.format(len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention))
         await saveState(ctx)
 
 @bot.command(name='nvm', help='Never mind. The equivalent of lowering a raied hand')
@@ -81,6 +82,7 @@ async def nvm(ctx):
         if data[ctx.guild.id]['queue'][i]['id'] == ctx.author.id:
             data[ctx.guild.id]['queue'].pop(i)
             await ctx.send('{} removed from queue'.format(ctx.author.display_name))
+        await saveState(ctx)
 
 @bot.command(name='next', help='See the current queue. Channel owner advances the queue as well.')
 async def next(ctx):
@@ -102,6 +104,7 @@ async def next(ctx):
 async def clear(ctx):
     if ctx.author == ctx.guild.owner:
         data[ctx.guild.id]['queue'] = []
+        await ctx.send('Queue is empty')
         await saveState(ctx)
 
 @bot.event
