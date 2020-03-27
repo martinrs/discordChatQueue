@@ -18,7 +18,7 @@ Everything is described in detail below.
 
 ### Download the project
 
-Simply download the project and unzip it in a folder of your choice.
+Simply download the project (the green button above) and unzip it in a folder of your choice.
 
 If you know git, use git :)
 
