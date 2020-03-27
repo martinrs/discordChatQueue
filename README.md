@@ -7,12 +7,20 @@ The project was born out of a need to help teach high schoolers during the Covid
 ## Getting Started
 
 To run the bot, you need to do these relatively simple steps:
+1. Download code
 1. Configure stuff
 2. Install stuff
 3. Install more stuff
+1. Run bot
 4. Use bot
 
 Everything is described in detail below.
+
+### Download the project
+
+Simply download the project and unzip it in a folder of your choice.
+
+If you know git, use git :)
 
 ### Setting up the bot application
 
