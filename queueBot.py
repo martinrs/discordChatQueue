@@ -118,7 +118,7 @@ async def on_ready():
             saveToJson(guild.id, data[guild.id])
         for channel in guild.text_channels:
             print(channel.name)
-            await channel.send('{} is online for your queueing pleasure'.format(bot.display_name))
+            await channel.send('{} is online for your queueing pleasure'.format(bot.name))
     pprint.pprint(data)
 
 @bot.event
