@@ -31,10 +31,10 @@ To complete this step we need to go to the [Discord Developer Portal](https://di
 5. Go to 'OAuth2' in the menu
 6. Configure the bot scope to bot
 7. Give the bot the following permissions
-  - View Channels
-  - Send Messages
-  - Mention Everyone
-  - Move Members
+    - View Channels
+    - Send Messages
+    - Mention Everyone
+    - Move Members
 8. Copy the resulting bot link to BOT_LINK' in the '.env' file
 9. Save and close
 
