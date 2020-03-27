@@ -87,6 +87,8 @@ If the bot does not run, one or more steps from above was not performed correctl
 
 ## Using the bot
 
+First, the bot must be a member of the server, you want to use it on. Use the `BOT_LINK` from the `.env` file and follow the instructions on the screen. The bot can handle being a member of multiple servers.
+
 The bot responds to four commands in any text channel on a server it is a member of. They are:
 Command | Function
 ------------ | -------------
