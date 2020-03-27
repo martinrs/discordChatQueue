@@ -108,18 +108,23 @@ async def clear(ctx):
 async def on_ready():
     global separator, data
     for guild in bot.guilds:
-        print('\n{} online in {}:'.format(bot.user.name, guild.name))
-        print('Loading data')
-        try:
-            data[guild.id] = loadFromJson(guild.id)
-        except FileNotFoundError:
-            print('No saved data found. Creating data file.')
-            data[guild.id] = {'serverID':guild.id, 'servername':guild.name, 'queue':[]}
-            saveToJson(guild.id, data[guild.id])
-        for channel in guild.text_channels:
-            print(channel.name)
-            await channel.send('{} is online for your queueing pleasure'.format(bot.user.display_name))
+        await on_guild_join(guild)
     pprint.pprint(data)
+
+@bot.event
+async def on_guild_join(guild):
+    global separator, data
+    print('\n{} online in {}:'.format(bot.user.name, guild.name))
+    print('Loading data')
+    try:
+        data[guild.id] = loadFromJson(guild.id)
+    except FileNotFoundError:
+        print('No saved data found. Creating data file.')
+        data[guild.id] = {'serverID':guild.id, 'servername':guild.name, 'queue':[]}
+        saveToJson(guild.id, data[guild.id])
+    for channel in guild.text_channels:
+        print(channel.name)
+        await channel.send('{} is online for your queueing pleasure'.format(bot.user.display_name))
 
 @bot.event
 async def on_member_join(member):
