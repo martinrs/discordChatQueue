@@ -103,7 +103,8 @@ As stated in the introduction, the owner of the guild/server is the only one wit
 
 The following features are planned and prioritized as listed
 1. Move channel owner to callers voice channel when owner uses `!next`
-2. Move all members to channel owner's voice chat on command `!plenum` with optional time delay parameter
+1. Move all members to channel owner's voice chat on command `!plenum` with optional time delay parameter
+1. Mute and Unmute all other members than owner (and possibly other exempted roles)
 
 If you have suggestions for new features, please request it as an [issue](https://github.com/martinrs/discordQueueBot/issues).
 
