@@ -1,6 +1,6 @@
 # discordQueueBot
 
-This is a lightweight queueing system for managing questions and discussions when teaching or meeting through Discord. The bot lets members of a Discord guild/server queue for something and enables the owner of the guild/server keep track of the queue.
+This is a lightweight queueing system for managing questions and discussions when teaching or meeting through Discord. The bot lets members of a Discord guild/server queue for something and enables the owner of the guild/server keep track of the queue and configure the bot's behavior.
 
 The project was born out of a need to help teach high schoolers during the Covid-19 pandemic.
 
@@ -96,13 +96,13 @@ Command | Function
 `!nvm` | Never mind. The equivalent of lowering a raied hand.
 `!next` | See the current queue. Channel owner advances the queue as well.
 `!clear` | Channel owner only. Clears the queue.
+`!config` | Channel owner only. Server owner only. Updates the chosen setting to the supplied configuration. The following settings are available:\nautofollow (True/False)\nChannel owner moved to callers voice chat on !next command if set to True.
 
 As stated in the introduction, the owner of the guild/server is the only one with full privileges to use `!next` and `!clear`.
 
 ## Roadmap
 
 The following features are planned and prioritized as listed
-1. Move channel owner to callers voice channel when owner uses `!next`
 1. Move all members to channel owner's voice chat on command `!plenum` with optional time delay parameter
 1. Mute and Unmute all other members than owner (and possibly other exempted roles)
 
