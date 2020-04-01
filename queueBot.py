@@ -6,7 +6,6 @@ separator = '------------------------------------------------------------------'
 
 bot = commands.Bot(command_prefix='!')
 
-dataFile = 'queueData.json'
 data = {}
 
 def saveToJson(filename, jsonDict):
@@ -30,6 +29,8 @@ def loadFromJson(filename):
         print('Unable to read data because: {} ({})'.format(e, type(e).__name__))
         content = {}
         raise
+    if 'config' not in content.keys():
+        content['config'] = {'autofollow': True}
     return content
 
 def makeQueueString(ctx):
@@ -84,8 +85,9 @@ async def nvm(ctx):
             await ctx.send('{} removed from queue'.format(ctx.author.display_name))
         await saveState(ctx)
 
-@bot.command(name='next', help='See the current queue. Channel owner advances the queue as well.')
+@bot.command(name='next', help='See the current queue. Server owner advances the queue as well.')
 async def next(ctx):
+    global data
     mentionString = ''
     if len(data[ctx.guild.id]['queue']) > 0 and ctx.author == ctx.guild.owner:
         call = data[ctx.guild.id]['queue'][0]
@@ -95,17 +97,26 @@ async def next(ctx):
         if call['message'] != '':
             await ctx.guild.owner.send('Message from {}: {}'.format(caller.display_name, call['message']))
         await saveState(ctx)
-        #if caller.voice.channel:
-        #    await ctx.guild.owner.move_to(caller.voice.channel)
-        #https://discordpy.readthedocs.io/en/latest/api.html?highlight=move%20member#discord.Member.move_to
+        if caller.voice.channel and ctx.guild.owner.voice and data[ctx.guild.id]['config']['autofollow']:
+            await ctx.guild.owner.move_to(caller.voice.channel)
     await ctx.send('{}\n{}'.format(mentionString, makeQueueString(ctx)))
 
-@bot.command(name='clear', help='Channel owner only. Clears the queue.')
+@bot.command(name='clear', help='Server owner only. Clears the queue.')
 async def clear(ctx):
     if ctx.author == ctx.guild.owner:
         data[ctx.guild.id]['queue'] = []
         await ctx.send('Queue is empty')
         await saveState(ctx)
+
+@bot.command(name='config', help='Server owner only. Updates the chosen setting to the supplied configuration. The following settings are available:\nautofollow (True/False)\nChannel owner moved to callers voice chat on !next command if set to True')
+async def config(ctx, *args):
+    if ctx.author == ctx.guild.owner and len(args) == 2:
+        if args[0].lower() in data[ctx.guild.id]['config'].keys() and args[1] in ('True', 'False'):
+            data[ctx.guild.id]['config'][args[0].lower()] = eval(args[1])
+            await ctx.send('{} is now set to {}'.format(args[0].capitalize(), data[ctx.guild.id]['config'][args[0]]))
+            await saveState(ctx)
+    else:
+        await ctx.send('Invalid config command. Use "!help config" for instructions.')
 
 @bot.event
 async def on_ready():
