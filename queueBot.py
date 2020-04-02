@@ -1,5 +1,7 @@
 import os, json, discord.utils, pprint
 from discord.ext import commands
+from discord.permissions import Permissions
+from discord.colour import Colour
 from dotenv import load_dotenv
 
 separator = '------------------------------------------------------------------'
@@ -63,6 +65,11 @@ def isQueued(caller):
             return True
     return False
 
+def hasRole(member, roleName):
+    if discord.utils.find(lambda r: r.name == roleName, member.guild.roles):
+        return True
+    return False
+
 @bot.command(name='call', help='The equivalent of raising your hand. Optional: Type a question, topic or comment to help your teacher, e.g.: "!call Struggling with rocket science" or "!call I have information regarding item two on the agenda"')
 async def call(ctx, *message):
     if isQueued(ctx.author):
@@ -110,13 +117,23 @@ async def clear(ctx):
 
 @bot.command(name='config', help='Server owner only. Updates the chosen setting to the supplied configuration. The following settings are available:\nautofollow (True/False)\nChannel owner moved to callers voice chat on !next command if set to True')
 async def config(ctx, *args):
-    if ctx.author == ctx.guild.owner and len(args) == 2:
+    if hasRole(ctx.author, 'Queue Manager') and len(args) == 2:
         if args[0].lower() in data[ctx.guild.id]['config'].keys() and args[1] in ('True', 'False'):
             data[ctx.guild.id]['config'][args[0].lower()] = eval(args[1])
             await ctx.send('{} is now set to {}'.format(args[0].capitalize(), data[ctx.guild.id]['config'][args[0]]))
             await saveState(ctx)
+        else:
+            await ctx.send('Invalid config command. Use "!help config" for instructions.')
     else:
-        await ctx.send('Invalid config command. Use "!help config" for instructions.')
+        ctx.send('You do not have permission to configure me')
+
+@bot.command(name='plenum', help='Server owner only. Moves every member of the server, who is connected to a voice channel, into the current voice channel of the server owner after a specified delay (default is 10 seconds)')
+async def plenum(ctx, delay=10):
+    delta = datetime.timedelta(seconds=delay)
+    if ctx.author == ctx.guild.owner:
+        print(datetime.datetime.now(), datetime.datetime.now() + delta)
+        # DAFUQ DIS SHIT ?!
+        await discord.utils.sleep_until(datetime.datetime.now() + delta)
 
 @bot.event
 async def on_ready():
@@ -128,6 +145,10 @@ async def on_ready():
 @bot.event
 async def on_guild_join(guild):
     global separator, data
+    if not discord.utils.find(lambda r: r.name == 'Queue Manager', guild.roles):
+        await guild.create_role(name='Queue Manager', permissions=Permissions(285346816), colour=Colour.dark_green(), hoist=True)
+        await guild.owner.add_roles(discord.utils.find(lambda r: r.name == 'Queue Manager', guild.roles))
+
     print('\n{} online in {}:'.format(bot.user.name, guild.name))
     print('Loading data')
     try:
@@ -138,11 +159,11 @@ async def on_guild_join(guild):
         saveToJson(guild.id, data[guild.id])
     for channel in guild.text_channels:
         print(channel.name)
-        await channel.send('{} is online for your queueing pleasure'.format(bot.user.display_name))
+        #await channel.send('{} is online for your queueing pleasure'.format(bot.user.display_name))
 
 @bot.event
 async def on_member_join(member):
-    await member.send("Hi! I'm {}. I help {} keep track of whose turn it is.\nI know these commands:\n!call\n!nvm\n!next\n\nUse '!help to learn more.'".format(bot.user.display_name, member.guild.owner))
+    await member.send("Hi! I'm {}. I helpkeep track of whose turn it is.\nI know these commands:\n!call\n!nvm\n!next\n\nUse '!help to learn more.'".format(bot.user.display_name))
 
 def main():
     global data
