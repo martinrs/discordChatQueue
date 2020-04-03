@@ -89,21 +89,23 @@ If the bot does not run, one or more steps from above was not performed correctl
 
 First, the bot must be a member of the server, you want to use it on. Use the `BOT_LINK` from the `.env` file and follow the instructions on the screen. The bot can handle being a member of multiple servers.
 
+By default the owner of the server will be given the role of **Queue Manager** and privileges to manage the queue (see commands below). The server owner (and anybody else with the **Queue Manager** role) has privileges to assign the role to others.
+
 The bot responds to four commands in any text channel on a server it is a member of. They are:
 Command | Function
 ------------ | -------------
 `!call` | The equivalent of raising your hand. Optional: Type a question, topic or comment to help your teacher, e.g.: "!call Struggling with rocket science" or "!call I have information regarding item two on the agenda".
-`!nvm` | Never mind. The equivalent of lowering a raied hand.
-`!next` | See the current queue. Channel owner advances the queue as well.
-`!clear` | Channel owner only. Clears the queue.
-`!config` | Channel owner only. Server owner only. Updates the chosen setting to the supplied configuration. The following settings are available:\nautofollow (True/False)\nChannel owner moved to callers voice chat on !next command if set to True.
+`!nvm` | Never mind. The equivalent of lowering a raised hand.
+`!next` | See the current queue. Queue Managers advances the queue as well.
+`!clear` | Queue Managers only. Clears the queue.
+`!config` | Queue Managers only. Queue Managers only. Updates the chosen setting to the supplied configuration. The following settings are available:\nautofollow (True/False)\nQueue Managers moved to callers voice chat on !next command if set to True.
 
 As stated in the introduction, the owner of the guild/server is the only one with full privileges to use `!next` and `!clear`.
 
 ## Roadmap
 
 The following features are planned and prioritized as listed
-1. Move all members to channel owner's voice chat on command `!plenum` with optional time delay parameter
+1. Move all members to Queue Manager's voice chat on command `!plenum` with optional time delay parameter
 1. Mute and Unmute all other members than owner (and possibly other exempted roles)
 
 If you have suggestions for new features, please request it as an [issue](https://github.com/martinrs/discordQueueBot/issues).
