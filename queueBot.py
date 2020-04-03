@@ -35,16 +35,6 @@ def loadFromJson(filename):
         content['config'] = {'autofollow': True}
     return content
 
-def makeQueueString(ctx):
-    queuestring = 'Queue is empty'
-    if len(data[ctx.guild.id]['queue']) > 0:
-        queuestring = ''
-        for i in range(len(data[ctx.guild.id]['queue'])):
-            call = data[ctx.guild.id]['queue'][i]
-            callername = discord.utils.get(ctx.guild.members, id=call['id']).display_name
-            queuestring += '{}:\t{}\n'.format(i, callername)
-    return queuestring
-
 def printQueue(ctx):
     global separator
     print(separator)
@@ -70,6 +60,31 @@ def hasRole(member, roleName):
         return True
     return False
 
+def makeQueueString(ctx):
+    queuestring = 'Queue is empty'
+    if len(data[ctx.guild.id]['queue']) > 0:
+        queuestring = ''
+        for i in range(len(data[ctx.guild.id]['queue'])):
+            call = data[ctx.guild.id]['queue'][i]
+            callername = discord.utils.get(ctx.guild.members, id=call['id']).display_name
+            queuestring += '{}:\t{}\n'.format(i, callername)
+    return queuestring
+
+def makeQueueManagerString(ctx):
+    qmlist = list(filter(lambda m: hasRole(m, 'Queue Manager') and m.status == discord.Status.online, ctx.guild.members))
+    if bot.user in qmlist:
+        qmlist.remove(bot.user)
+    out = ''
+    if len(qmlist) >= 1:
+        out += qmlist[0].mention
+    if len(qmlist) >= 2:
+        for i in range(1, len(qmlist)):
+            if i == len(qmlist)-1:
+                out += ' & {}'.format(qmlist[i].mention)
+            else:
+                out += ', {}'.format(qmlist[i].mention)
+    return out
+
 @bot.command(name='call', help='The equivalent of raising your hand. Optional: Type a question, topic or comment to help your teacher, e.g.: "!call Struggling with rocket science" or "!call I have information regarding item two on the agenda"')
 async def call(ctx, *message):
     if isQueued(ctx.author):
@@ -79,9 +94,9 @@ async def call(ctx, *message):
             message = ' '.join(message)
         addToQueue(ctx.author, ctx.guild, message)
         if len(data[ctx.guild.id]['queue']) > 1:
-            await ctx.send('Noted {}. {} queueing in front of you.\n{} in queue for you {}'.format(ctx.author.display_name, len(data[ctx.guild.id]['queue'])-1, len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention, len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention))
+            await ctx.send('Noted {}. {} queueing in front of you.\n{} in queue for you {}'.format(ctx.author.display_name, len(data[ctx.guild.id]['queue'])-1, len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention, len(data[ctx.guild.id]['queue']), makeQueueManagerString(ctx)))
         else:
-            await ctx.send('Noted. {} is next up.\n{} in queue for you {}'.format(ctx.author.display_name, len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention))
+            await ctx.send('Noted. {} is next up.\n{} in queue for you {}'.format(ctx.author.display_name, len(data[ctx.guild.id]['queue']), makeQueueManagerString(ctx)))
         await saveState(ctx)
 
 @bot.command(name='nvm', help='Never mind. The equivalent of lowering a raied hand')
@@ -102,21 +117,21 @@ async def next(ctx):
         data[ctx.guild.id]['queue'].pop(0)
         mentionString = 'You are up {}!'.format(caller.mention)
         if call['message'] != '':
-            await ctx.guild.owner.send('Message from {}: {}'.format(caller.display_name, call['message']))
+            await ctx.author.send('Message from {}: {}'.format(caller.display_name, call['message']))
         await saveState(ctx)
         if caller.voice and ctx.author.voice:
             if caller.voice.channel and ctx.author.voice.channel and data[ctx.guild.id]['config']['autofollow']:
                 await ctx.author.move_to(caller.voice.channel)
     await ctx.send('{}\n{}'.format(mentionString, makeQueueString(ctx)))
 
-@bot.command(name='clear', help='Server owner only. Clears the queue.')
+@bot.command(name='clear', help='Queue Managers only. Clears the queue.')
 async def clear(ctx):
     if ctx.author == ctx.guild.owner:
         data[ctx.guild.id]['queue'] = []
         await ctx.send('Queue is empty')
         await saveState(ctx)
 
-@bot.command(name='config', help='Server owner only. Updates the chosen setting to the supplied configuration. The following settings are available:\nautofollow (True/False)\nChannel owner moved to callers voice chat on !next command if set to True')
+@bot.command(name='config', help='Queue Managers only. Updates the chosen setting to the supplied configuration. The following settings are available:\nautofollow (True/False)\nChannel owner moved to callers voice chat on !next command if set to True')
 async def config(ctx, *args):
     if hasRole(ctx.author, 'Queue Manager') and len(args) == 2:
         if args[0].lower() in data[ctx.guild.id]['config'].keys() and args[1] in ('True', 'False'):
@@ -126,9 +141,9 @@ async def config(ctx, *args):
         else:
             await ctx.send('Invalid config command. Use "!help config" for instructions.')
     else:
-        ctx.send('You do not have permission to configure me')
+        ctx.send('You do not have permission to configure me.')
 
-@bot.command(name='plenum', help='Server owner only. Moves every member of the server, who is connected to a voice channel, into the current voice channel of the server owner after a specified delay (default is 10 seconds)')
+@bot.command(name='plenum', help='Queue Managers only. Moves every member of the server, who is connected to a voice channel, into the current voice channel of the server owner after a specified delay (default is 10 seconds)')
 async def plenum(ctx, delay=10):
     delta = datetime.timedelta(seconds=delay)
     if hasRole(ctx.author, 'Queue Manager'):
