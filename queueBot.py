@@ -1,4 +1,4 @@
-import os, json, discord.utils, pprint
+import os, json, discord.utils, pprint, datetime
 from discord.ext import commands
 from discord.permissions import Permissions
 from discord.colour import Colour
@@ -96,7 +96,7 @@ async def nvm(ctx):
 async def next(ctx):
     global data
     mentionString = ''
-    if len(data[ctx.guild.id]['queue']) > 0 and ctx.author == ctx.guild.owner:
+    if len(data[ctx.guild.id]['queue']) > 0 and hasRole(ctx.author, 'Queue Manager'):
         call = data[ctx.guild.id]['queue'][0]
         caller = discord.utils.get(ctx.guild.members, id=call['id'])
         data[ctx.guild.id]['queue'].pop(0)
@@ -104,8 +104,9 @@ async def next(ctx):
         if call['message'] != '':
             await ctx.guild.owner.send('Message from {}: {}'.format(caller.display_name, call['message']))
         await saveState(ctx)
-        if caller.voice.channel and ctx.guild.owner.voice and data[ctx.guild.id]['config']['autofollow']:
-            await ctx.guild.owner.move_to(caller.voice.channel)
+        if caller.voice and ctx.author.voice:
+            if caller.voice.channel and ctx.author.voice.channel and data[ctx.guild.id]['config']['autofollow']:
+                await ctx.author.move_to(caller.voice.channel)
     await ctx.send('{}\n{}'.format(mentionString, makeQueueString(ctx)))
 
 @bot.command(name='clear', help='Server owner only. Clears the queue.')
@@ -130,7 +131,7 @@ async def config(ctx, *args):
 @bot.command(name='plenum', help='Server owner only. Moves every member of the server, who is connected to a voice channel, into the current voice channel of the server owner after a specified delay (default is 10 seconds)')
 async def plenum(ctx, delay=10):
     delta = datetime.timedelta(seconds=delay)
-    if ctx.author == ctx.guild.owner:
+    if hasRole(ctx.author, 'Queue Manager'):
         print(datetime.datetime.now(), datetime.datetime.now() + delta)
         # DAFUQ DIS SHIT ?!
         await discord.utils.sleep_until(datetime.datetime.now() + delta)
@@ -145,6 +146,7 @@ async def on_ready():
 @bot.event
 async def on_guild_join(guild):
     global separator, data
+
     if not discord.utils.find(lambda r: r.name == 'Queue Manager', guild.roles):
         await guild.create_role(name='Queue Manager', permissions=Permissions(285346816), colour=Colour.dark_green(), hoist=True)
         await guild.owner.add_roles(discord.utils.find(lambda r: r.name == 'Queue Manager', guild.roles))
@@ -159,7 +161,7 @@ async def on_guild_join(guild):
         saveToJson(guild.id, data[guild.id])
     for channel in guild.text_channels:
         print(channel.name)
-        #await channel.send('{} is online for your queueing pleasure'.format(bot.user.display_name))
+        await channel.send('{} is online for your queueing pleasure'.format(bot.user.display_name))
 
 @bot.event
 async def on_member_join(member):
