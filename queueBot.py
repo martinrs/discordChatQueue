@@ -146,7 +146,7 @@ async def config(ctx, *args):
 @bot.command(name='plenum', help='Queue Managers only. Moves every member of the server, who is connected to a voice channel, into the current voice channel of the server owner after a 10 second delay. Specify another delay using e.g. "!plenum 30" for a 30 second delay.')
 async def plenum(ctx, delay=10):
     if hasRole(ctx.author, 'Queue Manager'):
-        await ctx.send('Moving everyone to plenum in {} seconds'.format(delay))
+        await ctx.send('Moving @everyone to plenum in {} seconds'.format(delay))
         delta = datetime.timedelta(seconds=delay)
         await discord.utils.sleep_until(datetime.datetime.utcnow() + delta, result='Time to meet')
         for member in ctx.guild.members:
