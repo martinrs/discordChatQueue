@@ -162,9 +162,10 @@ async def on_ready():
 async def on_guild_join(guild):
     global separator, data
 
-    if not discord.utils.find(lambda r: r.name == 'Queue Manager', guild.roles):
-        await guild.create_role(name='Queue Manager', permissions=Permissions(285346816), colour=Colour.dark_green(), hoist=True)
-        await guild.owner.add_roles(discord.utils.find(lambda r: r.name == 'Queue Manager', guild.roles))
+    QMrole = discord.utils.find(lambda r: r.name == 'Queue Manager', guild.roles)
+    if not QMrole:
+        QMrole = await guild.create_role(name='Queue Manager', permissions=Permissions(285346816), colour=Colour.dark_green(), hoist=True)
+    await guild.owner.add_roles(QMrole)
 
     print('\n{} online in {}:'.format(bot.user.name, guild.name))
     print('Loading data')
