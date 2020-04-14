@@ -35,7 +35,7 @@ To complete this step we need to go to the [Discord Developer Portal](https://di
 1. Make a new application and name it (only you will see this name)
 2. Go to **Bot** in the menu
 3. Make a new bot and name it (this will be the default name when connected)
-4. Copy the bot token to `DISCORD_TOKEN` in the `.env` file
+4. Copy the bot token to `DISCORD_TOKEN=` in the `.env` file
 5. Go to **OAuth2** in the menu
 6. Configure the bot scope to bot
 7. Give the bot the following permissions
@@ -43,7 +43,7 @@ To complete this step we need to go to the [Discord Developer Portal](https://di
     - Send Messages
     - Mention Everyone
     - Move Members
-8. Copy the resulting bot link to `BOT_LINK` in the `.env` file
+8. Copy the resulting bot link to `BOT_LINK=` in the `.env` file
 9. Save and close
 
 ### Python
@@ -91,12 +91,13 @@ First, the bot must be a member of the server, you want to use it on. Use the `B
 
 By default the owner of the server will be given the role of **Queue Manager** and privileges to manage the queue (see commands below). The server owner (and anybody else with the **Queue Manager** role) has privileges to assign the role to others.
 
-The bot responds to four commands in any text channel on a server it is a member of. They are:
+The bot responds to the following commands in any text channel on a server it is a member of. They are:
 Command | Function
 ------------ | -------------
 `!call` | The equivalent of raising your hand. Optional: Type a question, topic or comment to help your teacher, e.g.: "!call Struggling with rocket science" or "!call I have information regarding item two on the agenda".
 `!nvm` | Never mind. The equivalent of lowering a raised hand.
 `!next` | See the current queue. Queue Managers advances the queue as well.
+`!plenum` | Queue Managers only. Moves every member of the server, who is connected to a voice channel, into the current voice channel of the server owner after a 10 second delay. Specify another delay using e.g. "!plenum 30" for a 30 second delay.
 `!clear` | Queue Managers only. Clears the queue.
 `!config` | Queue Managers only. Queue Managers only. Updates the chosen setting to the supplied configuration. The following settings are available:\nautofollow (True/False)\nQueue Managers moved to callers voice chat on !next command if set to True.
 
@@ -105,7 +106,6 @@ As stated in the introduction, the owner of the guild/server is the only one wit
 ## Roadmap
 
 The following features are planned and prioritized as listed
-1. Move all members to Queue Manager's voice chat on command `!plenum` with optional time delay parameter
 1. Mute and Unmute all other members than owner (and possibly other exempted roles)
 
 If you have suggestions for new features, please request it as an [issue](https://github.com/martinrs/discordQueueBot/issues).
