@@ -103,6 +103,7 @@ Command | Function
 
 The following settings are available via `!config`
 Setting | Options | Effect
+------------ | -------------
 autofollow | True/False) | Queue Managers moved to callers voice chat on !next command if set to True.
 
 As stated in the introduction, the owner of the guild/server is the only one with full privileges to use `!next` and `!clear`.
