@@ -99,12 +99,12 @@ Command | Function
 `!next` | See the current queue. Queue Managers advances the queue as well.
 `!plenum` | Queue Managers only. Moves every member of the server, who is connected to a voice channel, into the current voice channel of the server owner after a 10 second delay. Specify another delay using e.g. "!plenum 30" for a 30 second delay.
 `!clear` | Queue Managers only. Clears the queue.
-`!config` | Queue Managers only. Updates the chosen setting to the supplied configuration. E.g. "autofollow false"
+`!config` | Queue Managers only. Updates the chosen setting to the supplied configuration. E.g. "!config autofollow False"
 
 The following settings are available via `!config`
 Setting | Options | Effect
 ------- | --------|--------
-autofollow | True/False) | Queue Managers moved to callers voice chat on !next command if set to True.
+`autofollow` | `True` or `False` | Queue Managers moved to callers voice chat on !next command if set to True.
 
 As stated in the introduction, the owner of the guild/server is the only one with full privileges to use `!next` and `!clear`.
 
