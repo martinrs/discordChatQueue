@@ -56,7 +56,7 @@ def isQueued(caller):
     return False
 
 def hasRole(member, roleName):
-    if discord.utils.find(lambda r: r.name == roleName, member.guild.roles):
+    if discord.utils.find(lambda r: r.name == roleName, member.roles):
         return True
     return False
 
@@ -156,7 +156,7 @@ async def on_ready():
     global separator, data
     for guild in bot.guilds:
         await on_guild_join(guild)
-    pprint.pprint(data)
+    #pprint.pprint(data)
 
 @bot.event
 async def on_guild_join(guild):
