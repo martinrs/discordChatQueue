@@ -143,13 +143,15 @@ async def config(ctx, *args):
     else:
         ctx.send('You do not have permission to configure me.')
 
-@bot.command(name='plenum', help='Queue Managers only. Moves every member of the server, who is connected to a voice channel, into the current voice channel of the server owner after a specified delay (default is 10 seconds)')
+@bot.command(name='plenum', help='Queue Managers only. Moves every member of the server, who is connected to a voice channel, into the current voice channel of the server owner after a 10 second delay. Specify another delay using e.g. "!plenum 30" for a 30 second delay.')
 async def plenum(ctx, delay=10):
-    delta = datetime.timedelta(seconds=delay)
     if hasRole(ctx.author, 'Queue Manager'):
-        print(datetime.datetime.now(), datetime.datetime.now() + delta)
-        # DAFUQ DIS SHIT ?!
-        await discord.utils.sleep_until(datetime.datetime.now() + delta)
+        await ctx.send('Moving everyone to plenum in {} seconds'.format(delay))
+        delta = datetime.timedelta(seconds=delay)
+        await discord.utils.sleep_until(datetime.datetime.utcnow() + delta, result='Time to meet')
+        for member in ctx.guild.members:
+            if member.voice:
+                await member.move_to(ctx.author.voice.channel)
 
 @bot.event
 async def on_ready():
@@ -181,7 +183,7 @@ async def on_guild_join(guild):
 
 @bot.event
 async def on_member_join(member):
-    await member.send("Hi! I'm {}. I helpkeep track of whose turn it is.\nI know these commands:\n!call\n!nvm\n!next\n\nUse '!help to learn more.'".format(bot.user.display_name))
+    await member.send("Hi! I'm {}. I help keep track of whose turn it is.\nI know these commands:\n!call\n!nvm\n!next\n\nUse '!help to learn more.'".format(bot.user.display_name))
 
 def main():
     global data
