@@ -134,8 +134,8 @@ async def clear(ctx):
 @bot.command(name='config', help='Queue Managers only. Updates the chosen setting to the supplied configuration. The following settings are available:\nautofollow (True/False)\nChannel owner moved to callers voice chat on !next command if set to True')
 async def config(ctx, *args):
     if hasRole(ctx.author, 'Queue Manager') and len(args) == 2:
-        if args[0].lower() in data[ctx.guild.id]['config'].keys() and args[1] in ('True', 'False'):
-            data[ctx.guild.id]['config'][args[0].lower()] = eval(args[1])
+        if args[0].lower() in data[ctx.guild.id]['config'].keys() and args[1].capitalize() in ('True', 'False'):
+            data[ctx.guild.id]['config'][args[0].lower()] = eval(args[1].capitalize())
             await ctx.send('{} is now set to {}'.format(args[0].capitalize(), data[ctx.guild.id]['config'][args[0]]))
             await saveState(ctx)
         else:
