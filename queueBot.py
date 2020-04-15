@@ -56,7 +56,7 @@ def isQueued(caller):
     return False
 
 def hasRole(member, roleName):
-    if discord.utils.find(lambda r: r.name == roleName, member.roles):
+    if discord.utils.find(lambda r: r.name == roleName, member.roles) or member.guild.owner == member:
         return True
     return False
 
@@ -170,7 +170,7 @@ async def on_guild_join(guild):
     try:
         await guild.owner.add_roles(QMrole)
     except discord.errors.Forbidden:
-        print('Bot does not have Manage Role Permissions')
+        print('Bot does not have "Manage Role" Permissions')
 
     print('\n{} online in {}:'.format(bot.user.name, guild.name))
     print('Loading data')
