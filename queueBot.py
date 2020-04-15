@@ -167,7 +167,10 @@ async def on_guild_join(guild):
     QMrole = discord.utils.find(lambda r: r.name == 'Queue Manager', guild.roles)
     if not QMrole:
         QMrole = await guild.create_role(name='Queue Manager', permissions=Permissions(285346816), colour=Colour.dark_green(), hoist=True)
-    await guild.owner.add_roles(QMrole)
+    try:
+        await guild.owner.add_roles(QMrole)
+    except discord.errors.Forbidden:
+        print('Bot does not have Manage Role Permissions')
 
     print('\n{} online in {}:'.format(bot.user.name, guild.name))
     print('Loading data')
