@@ -62,7 +62,7 @@ def hasRole(member, roleName):
 
 def queueManagerPresent(guild):
     for member in guild.members:
-        if member.status = discord.Status.online and hasRole(member, 'Queue Manager'):
+        if member.status == discord.Status.online and hasRole(member, 'Queue Manager'):
             return True
     return False
 
@@ -189,7 +189,7 @@ async def on_guild_join(guild):
     for channel in guild.text_channels:
         print(channel.name)
         if queueManagerPresent(guild):
-            await channel.send('{} is online for your queueing pleasure {}'.format(bot.user.display_name, queueManagerPresent()))
+            await channel.send('{} is online for your queueing pleasure {}'.format(bot.user.display_name, queueManagerPresent(guild)))
 
 @bot.event
 async def on_member_join(member):
