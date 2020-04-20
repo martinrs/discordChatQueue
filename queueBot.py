@@ -189,7 +189,7 @@ async def on_guild_join(guild):
     for channel in guild.text_channels:
         print(channel.name)
         if queueManagerPresent(guild):
-            await channel.send('{} is online for your queueing pleasure {}'.format(bot.user.display_name, queueManagerPresent(guild)))
+            await channel.send('{} is online for your queueing pleasure'.format(bot.user.display_name))
 
 @bot.event
 async def on_member_join(member):
