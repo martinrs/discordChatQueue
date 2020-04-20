@@ -60,6 +60,12 @@ def hasRole(member, roleName):
         return True
     return False
 
+def queueManagerPresent(guild):
+    for member in guild.members:
+        if member.status = discord.Status.online and hasRole(member, 'Queue Manager'):
+            return True
+    return False
+
 def makeQueueString(ctx):
     queuestring = 'Queue is empty'
     if len(data[ctx.guild.id]['queue']) > 0:
@@ -182,7 +188,8 @@ async def on_guild_join(guild):
         saveToJson(guild.id, data[guild.id])
     for channel in guild.text_channels:
         print(channel.name)
-        await channel.send('{} is online for your queueing pleasure'.format(bot.user.display_name))
+        if queueManagerPresent(guild):
+            await channel.send('{} is online for your queueing pleasure {}'.format(bot.user.display_name, queueManagerPresent()))
 
 @bot.event
 async def on_member_join(member):
