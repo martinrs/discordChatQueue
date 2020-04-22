@@ -62,7 +62,7 @@ def hasRole(member, roleName):
 
 def queueManagerPresent(guild):
     for member in guild.members:
-        if member.status == discord.Status.online and hasRole(member, 'Queue Manager'):
+        if member.status == discord.Status.online and member.voice and hasRole(member, 'Queue Manager'):
             return True
     return False
 
