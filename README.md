@@ -36,6 +36,7 @@ To complete this step we need to go to the [Discord Developer Portal](https://di
 2. Go to **Bot** in the menu
 3. Make a new bot and name it (this will be the default name when connected)
 4. Copy the bot token to `DISCORD_TOKEN=` in the `.env` file
+4. Enable the `Server Members Intent` option
 5. Go to **OAuth2** in the menu
 6. Configure the bot scope to bot
 7. Give the bot the following permissions
