@@ -6,7 +6,9 @@ from dotenv import load_dotenv
 
 separator = '------------------------------------------------------------------'
 
-bot = commands.Bot(command_prefix='!')
+intents = discord.Intents.default()
+intents.members = True
+bot = commands.Bot(command_prefix='!', intents=intents)
 
 data = {}
 
@@ -169,7 +171,7 @@ async def on_ready():
 @bot.event
 async def on_guild_join(guild):
     global separator, data
-
+    print(guild, guild.owner_id)
     QMrole = discord.utils.find(lambda r: r.name == 'Queue Manager', guild.roles)
     if not QMrole:
         QMrole = await guild.create_role(name='Queue Manager', permissions=Permissions(285346816), colour=Colour.dark_green(), hoist=True)
