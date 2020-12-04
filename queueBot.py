@@ -33,8 +33,9 @@ def loadFromJson(filename):
         print('Unable to read data because: {} ({})'.format(e, type(e).__name__))
         content = {}
         raise
-    if 'config' not in content.keys():
+    if not 'config' in content.keys():
         content['config'] = {'autofollow': True}
+    print(content.keys())
     return content
 
 def printQueue(ctx):
