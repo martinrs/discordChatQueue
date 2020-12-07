@@ -12,10 +12,14 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 
 data = {}
 
-def saveToJson(filename, jsonDict):
+def makeFileName(guild):
+    return '{}.{}'.format(guild.name, guild.id)
+
+def saveToJson(guild, jsonDict):
     if not os.path.exists('./data'):
         os.mkdir('./data')
     try:
+        filename = makeFileName(guild)
         file = open('./data/{}.json'.format(filename), 'w')
         file.write(json.dumps(jsonDict))
         file.close()
@@ -23,18 +27,19 @@ def saveToJson(filename, jsonDict):
         print('Unable to write data to file because: {}'.format(e))
         raise
 
-def loadFromJson(filename):
+def loadFromJson(guild):
     content = None
     try:
+        filename = makeFileName(guild)
         file = open('./data/{}.json'.format(filename), 'r')
         content = json.loads(file.read())
         file.close()
+        if not 'config' in content.keys():
+            content['config'] = {'autofollow': True}
     except Exception as e:
         print('Unable to read data because: {} ({})'.format(e, type(e).__name__))
         content = {}
         raise
-    if not 'config' in content.keys():
-        content['config'] = {'autofollow': True}
     print(content.keys())
     return content
 
@@ -49,7 +54,7 @@ def addToQueue(caller, server, message):
     data[server.id]['queue'].append({'id': caller.id, 'server': server.name, 'message': message})
 
 async def saveState(ctx):
-    saveToJson(ctx.guild.id, data[ctx.guild.id])
+    saveToJson(ctx.guild, data[ctx.guild.id])
     printQueue(ctx)
 
 def isQueued(caller):
@@ -172,7 +177,6 @@ async def on_ready():
 @bot.event
 async def on_guild_join(guild):
     global separator, data
-    print(guild, guild.owner_id)
     QMrole = discord.utils.find(lambda r: r.name == 'Queue Manager', guild.roles)
     if not QMrole:
         QMrole = await guild.create_role(name='Queue Manager', permissions=Permissions(285346816), colour=Colour.dark_green(), hoist=True)
@@ -181,14 +185,14 @@ async def on_guild_join(guild):
     except discord.errors.Forbidden:
         print('Bot does not have "Manage Role" Permissions')
 
-    print('\n{} online in {}:'.format(bot.user.name, guild.name))
+    print('\n{} online in {} (id: {}):'.format(bot.user.name, guild.name, guild.id))
     print('Loading data')
     try:
-        data[guild.id] = loadFromJson(guild.id)
+        data[guild.id] = loadFromJson(guild)
     except FileNotFoundError:
         print('No saved data found. Creating data file.')
-        data[guild.id] = {'serverID':guild.id, 'servername':guild.name, 'queue':[]}
-        saveToJson(guild.id, data[guild.id])
+        data[guild.id] = {'serverID':guild.id, 'servername':guild.name, 'queue':[], 'config': {'autofollow': True}}
+    saveToJson(guild, data[guild.id])
     for channel in guild.text_channels:
         print(channel.name)
         if queueManagerPresent(guild):
