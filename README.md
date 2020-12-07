@@ -40,6 +40,7 @@ To complete this step we need to go to the [Discord Developer Portal](https://di
 5. Go to **OAuth2** in the menu
 6. Configure the bot scope to bot
 7. Give the bot the following permissions
+    - Manage Roles
     - View Channels
     - Send Messages
     - Mention Everyone
