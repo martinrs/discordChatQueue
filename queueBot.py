@@ -5,7 +5,7 @@ from discord.colour import Colour
 from dotenv import load_dotenv
 
 separator = '------------------------------------------------------------------'
-
+print('Using discord.py verison: {}'.format(discord.__version__))
 intents = discord.Intents.default()
 intents.members = True
 bot = commands.Bot(command_prefix='!', intents=intents)
@@ -40,7 +40,6 @@ def loadFromJson(guild):
         print('Unable to read data because: {} ({})'.format(e, type(e).__name__))
         content = {}
         raise
-    print(content.keys())
     return content
 
 def printQueue(ctx):
@@ -113,7 +112,7 @@ async def call(ctx, *message):
             await ctx.send('Noted. {} is next up.\n{} in queue for you {}'.format(ctx.author.display_name, len(data[ctx.guild.id]['queue']), makeQueueManagerString(ctx)))
         await saveState(ctx)
 
-@bot.command(name='nvm', help='Never mind. The equivalent of lowering a raied hand')
+@bot.command(name='nvm', help='Never mind. The equivalent of lowering a raised hand')
 async def nvm(ctx):
     for i in range(len(data[ctx.guild.id]['queue'])):
         if data[ctx.guild.id]['queue'][i]['id'] == ctx.author.id:
@@ -194,7 +193,7 @@ async def on_guild_join(guild):
         data[guild.id] = {'serverID':guild.id, 'servername':guild.name, 'queue':[], 'config': {'autofollow': True}}
     saveToJson(guild, data[guild.id])
     for channel in guild.text_channels:
-        print(channel.name)
+        #print(channel.name)
         if queueManagerPresent(guild):
             await channel.send('{} is online for your queueing pleasure'.format(bot.user.display_name))
 
