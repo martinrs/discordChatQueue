@@ -1,4 +1,4 @@
-import os, sys, json, discord.utils, pprint, datetime
+import os, sys, json, discord.utils, datetime
 from discord.ext import commands
 from discord.permissions import Permissions
 from discord.colour import Colour

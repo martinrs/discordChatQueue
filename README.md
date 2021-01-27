@@ -70,13 +70,6 @@ pip install python-dotenv
 ```
 Detailed instructions are found [here](https://pypi.org/project/python-dotenv/) if you encounter problems.
 
-#### Install pprint library
-Install the library using pip. Usually like below.
-```
-pip install pprint
-```
-There are no detailed instructions for this library, but you should have the hang of this now.
-
 ## Running the bot
 
 Simply run `queueBot.py`. Run by executing the file via double click or via Command Prompt (windows) or terminal on Mac or Linux.
