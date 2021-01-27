@@ -1,4 +1,4 @@
-import os, json, discord.utils, pprint, datetime
+import os, sys, json, discord.utils, pprint, datetime
 from discord.ext import commands
 from discord.permissions import Permissions
 from discord.colour import Colour
@@ -165,6 +165,10 @@ async def plenum(ctx, delay=10):
         for member in ctx.guild.members:
             if member.voice:
                 await member.move_to(ctx.author.voice.channel)
+
+@bot.command(name='specs')
+async def specs(ctx):
+    await ctx.send('Python version: {}\ndiscord.py verison: {}'.format(sys.version, discord.__version__))
 
 @bot.event
 async def on_ready():
