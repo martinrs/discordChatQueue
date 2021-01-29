@@ -1,4 +1,4 @@
-import os, sys, json, discord.utils, datetime
+import os, sys, json, discord.utils, datetime, socket, time
 from discord.ext import commands
 from discord.permissions import Permissions
 from discord.colour import Colour
@@ -212,4 +212,18 @@ def main():
     print('\nRunning bot.\nAdd the bot to servers with this link:\n{}'.format(os.getenv('BOT_LINK')))
     bot.run(os.getenv('DISCORD_TOKEN'))
 
+def internetIsAvailable():
+    try:
+        socket.create_connection(('1.1.1.1', 53))
+        return True
+    except:
+        return False
+
+while True:
+    if internetIsAvailable():
+        print('Internet Connection Available.\nStarting Bot.')
+        break
+    else:
+        print('Connection not available.\nRetrying in 10 seconds.')
+        time.sleep(10)
 main()
