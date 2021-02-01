@@ -166,7 +166,7 @@ async def plenum(ctx, delay=10):
             if member.voice:
                 await member.move_to(ctx.author.voice.channel)
 
-@bot.command(name='specs', help='Prints the version of Python and the version of the discord.py-library being used by the bot.')
+@bot.command(name='specs')
 async def specs(ctx):
     await ctx.send('Python version: {}\ndiscord.py verison: {}'.format(sys.version, discord.__version__))
 
