@@ -44,6 +44,7 @@ To complete this step we need to go to the [Discord Developer Portal](https://di
     - View Channels
     - Send Messages
     - Mention Everyone
+    - Mute Members
     - Move Members
 8. Copy the resulting bot link to `BOT_LINK=` in the `.env` file
 9. Save and close
