@@ -63,8 +63,11 @@ def isQueued(caller):
     return False
 
 def hasRole(member, roleName):
-    if discord.utils.find(lambda r: r.name == roleName, member.roles) or member.guild.owner == member:
+    if member.guild.owner == member:
         return True
+    for role in member.roles:
+        if role.name == roleName:
+            return true
     return False
 
 def queueManagerPresent(guild):
@@ -170,20 +173,30 @@ async def plenum(ctx, delay=10):
 async def specs(ctx):
     await ctx.send('Python version: {}\ndiscord.py verison: {}'.format(sys.version, discord.__version__))
 
-@bot.command(name='mute', help='NOT IMPLEMENTED YET. Queue Managers only. Mutes all non-Queue Managers in the same voice channel as the Queue Manager who issued the command.')
-async def specs(ctx):
-    await ctx.send('Command is not available yet. Stay tuned.')
+@bot.command(name='mute', help='Queue Managers only. Mutes all non-Queue Managers in the same voice channel as the Queue Manager who issued the command.')
+async def mute(ctx):
+    if ctx.author.voice and hasRole(ctx.author, 'Queue Manager'):
+        await ctx.send('{} says: Quiet please'.format(ctx.author.display_name))
+        for member in ctx.guild.members:
+            if member.voice:
+                if member.voice.channel == ctx.author.voice.channel and not hasRole(member, 'Queue Manager'):
+                    await member.edit(mute=True)
 
-@bot.command(name='unmute', help='NOT IMPLEMENTED YET. Queue Managers only. Mutes all non-Queue Managers in the same voice channel as the Queue Manager who issued the command.')
-async def specs(ctx):
-    await ctx.send('Command is not available yet. Stay tuned.')
+@bot.command(name='unmute', help='Queue Managers only. Mutes all non-Queue Managers in the same voice channel as the Queue Manager who issued the command.')
+async def unmute(ctx):
+        if ctx.author.voice and hasRole(ctx.author, 'Queue Manager'):
+            await ctx.send('{} says: Speak'.format(ctx.author.display_name))
+            for member in ctx.guild.members:
+                if member.voice:
+                    if member.voice.channel == ctx.author.voice.channel and not hasRole(member, 'Queue Manager'):
+                        await member.edit(mute=False)
 
 @bot.event
 async def on_ready():
     global separator, data
     for guild in bot.guilds:
         await on_guild_join(guild)
-    #pprint.pprint(data)
+    print('\nBot ready')
 
 @bot.event
 async def on_guild_join(guild):
