@@ -166,9 +166,17 @@ async def plenum(ctx, delay=10):
             if member.voice:
                 await member.move_to(ctx.author.voice.channel)
 
-@bot.command(name='specs')
+@bot.command(name='specs', help='Prints the version of Python and the version of the discord.py-library being used by the bot.')
 async def specs(ctx):
     await ctx.send('Python version: {}\ndiscord.py verison: {}'.format(sys.version, discord.__version__))
+
+@bot.command(name='mute', help='NOT IMPLEMENTED YET. Queue Managers only. Mutes all non-Queue Managers in the same voice channel as the Queue Manager who issued the command.')
+async def specs(ctx):
+    await ctx.send('Command is not available yet. Stay tuned.')
+
+@bot.command(name='unmute', help='NOT IMPLEMENTED YET. Queue Managers only. Mutes all non-Queue Managers in the same voice channel as the Queue Manager who issued the command.')
+async def specs(ctx):
+    await ctx.send('Command is not available yet. Stay tuned.')
 
 @bot.event
 async def on_ready():
