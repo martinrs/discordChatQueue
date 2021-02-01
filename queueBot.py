@@ -185,7 +185,7 @@ async def mute(ctx):
 @bot.command(name='unmute', help='Queue Managers only. Mutes all non-Queue Managers in the same voice channel as the Queue Manager who issued the command.')
 async def unmute(ctx):
         if ctx.author.voice and hasRole(ctx.author, 'Queue Manager'):
-            await ctx.send('{} says: Speak'.format(ctx.author.display_name))
+            await ctx.send('{} says: You may speak'.format(ctx.author.display_name))
             for member in ctx.guild.members:
                 if member.voice:
                     if member.voice.channel == ctx.author.voice.channel and not hasRole(member, 'Queue Manager'):
