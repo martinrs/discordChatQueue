@@ -67,7 +67,7 @@ def hasRole(member, roleName):
         return True
     for role in member.roles:
         if role.name == roleName:
-            return true
+            return True
     return False
 
 def queueManagerPresent(guild):
@@ -110,7 +110,8 @@ async def call(ctx, *message):
             message = ' '.join(message)
         addToQueue(ctx.author, ctx.guild, message)
         if len(data[ctx.guild.id]['queue']) > 1:
-            await ctx.send('Noted {}. {} queueing in front of you.\n{} in queue for you {}'.format(ctx.author.display_name, len(data[ctx.guild.id]['queue'])-1, len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention, len(data[ctx.guild.id]['queue']), makeQueueManagerString(ctx)))
+            response = 'Noted {}. {} queueing in front of you.\n{} in queue for you {}'.format(ctx.author.display_name, len(data[ctx.guild.id]['queue'])-1, len(data[ctx.guild.id]['queue']), ctx.guild.owner.mention, len(data[ctx.guild.id]['queue']), makeQueueManagerString(ctx))
+            await ctx.send(response)
         else:
             await ctx.send('Noted. {} is next up.\n{} in queue for you {}'.format(ctx.author.display_name, len(data[ctx.guild.id]['queue']), makeQueueManagerString(ctx)))
         await saveState(ctx)
