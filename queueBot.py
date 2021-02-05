@@ -169,8 +169,8 @@ async def plenum(ctx, delay=10):
             if member.voice:
                 await member.move_to(ctx.author.voice.channel)
 
-@bot.command(name='specs')
-async def specs(ctx):
+@bot.command(name='host', hidden=True)
+async def host(ctx):
     await ctx.send('Python version: {}\ndiscord.py verison: {}'.format(sys.version, discord.__version__))
 
 @bot.command(name='mute', help='Queue Managers only. Mutes all non-Queue Managers in the same voice channel as the Queue Manager who issued the command.')
