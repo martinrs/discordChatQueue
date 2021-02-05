@@ -1,4 +1,4 @@
-import os, sys, json, discord.utils, datetime, socket, time
+import os, platform, sys, json, discord.utils, datetime, socket, time
 from discord.ext import commands
 from discord.permissions import Permissions
 from discord.colour import Colour
@@ -172,7 +172,7 @@ async def plenum(ctx, delay=10):
 
 @bot.command(name='host', hidden=True)
 async def host(ctx):
-    await ctx.send('Python version: {}\ndiscord.py verison: {}'.format(sys.version, discord.__version__))
+    await ctx.send('Operating System: {}\nPython version: {}\ndiscord.py verison: {}\nRunning on {}'.format(platform.system(), sys.version, discord.__version__, platform.processor()))
 
 @bot.command(name='mute', help='Queue Managers only. Mutes all non-Queue Managers in the same voice channel as the Queue Manager who issued the command.')
 async def mute(ctx):
