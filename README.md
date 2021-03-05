@@ -24,9 +24,11 @@ If you know git, use git :)
 
 ### Setting up the bot application
 
-Once you have cloned or downloaded the project, you will need to create a file in the same directory named `.env`. The file contents must be the following:
+Once you have cloned or downloaded the project, you will need to create a file in the same directory named `.env` - that's right. Just a dot and three letters. Nothing else.
+
+The file contents must be the following:
 ```
-# .env Testbot
+# Secret Discord token
 DISCORD_TOKEN=Your bot token goes here
 BOT_LINK=Your bot link goes here
 ```
@@ -35,7 +37,7 @@ To complete this step we need to go to the [Discord Developer Portal](https://di
 1. Make a new application and name it (only you will see this name)
 2. Go to **Bot** in the menu
 3. Make a new bot and name it (this will be the default name when connected)
-4. Copy the bot token to `DISCORD_TOKEN=` in the `.env` file
+4. Copy the bot token to `DISCORD_TOKEN=` in the `.env` file (replacing `Your bot token goes here`)
 4. Enable the `Server Members Intent` option
 5. Go to **OAuth2** in the menu
 6. Configure the bot scope to bot
@@ -46,7 +48,7 @@ To complete this step we need to go to the [Discord Developer Portal](https://di
     - Mention Everyone
     - Mute Members
     - Move Members
-8. Copy the resulting bot link to `BOT_LINK=` in the `.env` file
+8. Copy the resulting bot link to `BOT_LINK=` in the `.env` file (replacing `Your bot link goes here`)
 9. Save and close
 
 ### Python
@@ -95,6 +97,8 @@ Command | Function
 `!next` | See the current queue. Queue Managers advances the queue as well.
 `!plenum` | Queue Managers only. Moves every member of the server, who is connected to a voice channel, into the current voice channel of the server owner after a 10 second delay. Specify another delay using e.g. "!plenum 30" for a 30 second delay.
 `!clear` | Queue Managers only. Clears the queue.
+`!mute` | Queue Managers only. Mutes everyone but the person who issued the command.
+`!unmute` | Queue Managers only. Unmutes everyone.
 `!config` | Queue Managers only. Updates the chosen setting to the supplied configuration. E.g. "!config autofollow False"
 
 The following settings are available via `!config`
@@ -107,7 +111,8 @@ As stated in the introduction, the owner of the guild/server is the only one wit
 ## Roadmap
 
 The following features are planned and prioritized as listed
-1. Mute and Unmute all other members than owner (and possibly other exempted roles)
+1. Add time specification to `!plenum`-command in hours, minutes, seconds
+2. Improve notifications for Queue Managers when server has many text chat channels
 
 If you have suggestions for new features, please request it as an [issue](https://github.com/martinrs/discordQueueBot/issues).
 
